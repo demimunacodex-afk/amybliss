@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Amybliss!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#FFD1E8;
+    --sky:#B8E6FF;
+    --butter:#FFF3B0;
+    --mint:#C4F5D0;
+    --plum:#4A2545;
+    --coral:#FF6F91;
+    --cream:#FFFBF5;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Quicksand', sans-serif;
+    color:var(--plum);
+    background:var(--cream);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- Confetti canvas ---------- */
+  #confetti-canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:999;
+  }
+
+  /* ---------- Background blobs ---------- */
+  .bg-blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(2px);
+    opacity:0.6;
+    z-index:0;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:2rem 1.25rem;
+    background:
+      radial-gradient(circle at 15% 20%, var(--pink) 0%, transparent 40%),
+      radial-gradient(circle at 85% 15%, var(--sky) 0%, transparent 40%),
+      radial-gradient(circle at 50% 90%, var(--butter) 0%, transparent 45%),
+      var(--cream);
+    overflow:hidden;
+  }
+  .balloon{
+    position:absolute;
+    bottom:-120px;
+    width:60px;
+    height:76px;
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation:float-up linear infinite;
+    opacity:0.85;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    bottom:-22px;
+    left:50%;
+    width:1.5px;
+    height:22px;
+    background:rgba(74,37,69,0.35);
+  }
+  @keyframes float-up{
+    0%{ transform:translateY(0) translateX(0) rotate(-4deg); }
+    50%{ transform:translateY(-60vh) translateX(20px) rotate(4deg); }
+    100%{ transform:translateY(-120vh) translateX(-10px) rotate(-4deg); }
+  }
+
+  .eyebrow{
+    font-family:'Baloo 2', cursive;
+    font-size:1rem;
+    letter-spacing:0.08em;
+    background:white;
+    padding:0.4rem 1.1rem;
+    border-radius:999px;
+    box-shadow:0 4px 0 rgba(74,37,69,0.08);
+    color:var(--coral);
+    margin-bottom:1.5rem;
+    z-index:2;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 9vw, 5.5rem);
+    line-height:1.05;
+    margin:0 0 0.5rem;
+    color:var(--plum);
+    z-index:2;
+    text-shadow: 3px 3px 0 var(--pink);
+  }
+  .hero h1 .name{
+    color:var(--coral);
+    text-shadow: 3px 3px 0 var(--butter);
+  }
+  .hero p.sub{
+    font-size:clamp(1rem, 2.6vw, 1.3rem);
+    max-width:38ch;
+    z-index:2;
+    margin-bottom:2.5rem;
+  }
+
+  /* ---------- Countdown ---------- */
+  .countdown{
+    display:flex;
+    gap:0.9rem;
+    z-index:2;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .flip{
+    background:white;
+    border-radius:18px;
+    padding:1.1rem 0.9rem;
+    min-width:82px;
+    box-shadow:0 6px 0 rgba(74,37,69,0.12);
+    position:relative;
+  }
+  .flip .num{
+    font-family:'Baloo 2', cursive;
+    font-size:clamp(1.8rem,5vw,2.6rem);
+    font-weight:800;
+    color:var(--coral);
+    display:block;
+    line-height:1;
+  }
+  .flip .label{
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--plum);
+    opacity:0.7;
+    margin-top:0.35rem;
+    display:block;
+  }
+  .tz-note{
+    margin-top:1.2rem;
+    font-size:0.85rem;
+    opacity:0.6;
+    z-index:2;
+  }
+
+  .its-here{
+    display:none;
+    font-family:'Baloo 2', cursive;
+    font-size:clamp(2rem,6vw,3rem);
+    color:var(--coral);
+    z-index:2;
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom:1.8rem;
+    font-size:0.85rem;
+    opacity:0.55;
+    z-index:2;
+    animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(6px);}
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{
+    padding:5rem 1.5rem;
+    position:relative;
+  }
+  .section-title{
+    text-align:center;
+    font-size:clamp(2rem,5vw,2.8rem);
+    margin-bottom:0.6rem;
+  }
+  .section-sub{
+    text-align:center;
+    max-width:44ch;
+    margin:0 auto 3rem;
+    opacity:0.75;
+  }
+
+  /* Message section */
+  .message-wrap{
+    background:var(--pink);
+    border-radius:28px;
+    max-width:640px;
+    margin:0 auto;
+    padding:2.6rem 2.2rem;
+    box-shadow:0 8px 0 rgba(74,37,69,0.1);
+    position:relative;
+  }
+  .message-wrap::before{
+    content:'💌';
+    position:absolute;
+    top:-28px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:2.2rem;
+    background:var(--cream);
+    border-radius:50%;
+    width:56px;
+    height:56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 0 rgba(74,37,69,0.1);
+  }
+  .message-wrap p{
+    font-size:1.1rem;
+    line-height:1.7;
+  }
+  .message-wrap .sign-off{
+    font-family:'Baloo 2', cursive;
+    font-size:1.3rem;
+    color:var(--coral);
+    margin-top:1.2rem;
+  }
+  .editable-hint{
+    text-align:center;
+    font-size:0.8rem;
+    opacity:0.5;
+    margin-top:1rem;
+  }
+
+  /* Gallery - polaroids */
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(190px,1fr));
+    gap:2rem;
+    max-width:960px;
+    margin:0 auto;
+  }
+  .polaroid{
+    background:white;
+    padding:0.8rem 0.8rem 2.2rem;
+    border-radius:6px;
+    box-shadow:0 10px 20px rgba(74,37,69,0.12);
+    transform:rotate(var(--rot));
+    transition:transform 0.25s ease;
+    position:relative;
+  }
+
+  .polaroid .frame img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .polaroid:hover{ transform:rotate(0deg) scale(1.04); z-index:5;}
+  .polaroid:nth-child(1){--rot:-4deg;}
+  .polaroid:nth-child(2){--rot:3deg;}
+  .polaroid:nth-child(3){--rot:-2deg;}
+  .polaroid:nth-child(4){--rot:5deg;}
+  .polaroid:nth-child(5){--rot:-5deg;}
+  .polaroid:nth-child(6){--rot:2deg;}
+  .polaroid .frame{
+    aspect-ratio:1/1;
+    border-radius:2px;
+    background:linear-gradient(135deg,var(--sky),var(--mint));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.4rem;
+    overflow:hidden;
+  }
+  .polaroid .cap{
+    position:absolute;
+    bottom:0.6rem;
+    left:0;
+    right:0;
+    text-align:center;
+    font-family:'Baloo 2', cursive;
+    font-size:0.9rem;
+    color:var(--plum);
+    opacity:0.7;
+  }
+  .tape{
+    position:absolute;
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    width:60px;
+    height:22px;
+    background:rgba(255,209,232,0.85);
+    box-shadow:0 2px 4px rgba(0,0,0,0.06);
+  }
+
+  /* Locked messages */
+  .lockbox{
+    max-width:280px;
+    margin:0 auto 3rem;
+    background:white;
+    border-radius:24px;
+    padding:2.4rem 1.5rem;
+    text-align:center;
+    box-shadow:0 8px 0 rgba(74,37,69,0.1);
+    cursor:pointer;
+    border:3px dashed var(--coral);
+    transition:transform 0.15s ease;
+  }
+  .lockbox:hover{ transform:translateY(-3px); }
+  .lockbox.shake{ animation:shake 0.4s ease; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    25%{ transform:translateX(-6px) rotate(-2deg); }
+    75%{ transform:translateX(6px) rotate(2deg); }
+  }
+  .lock-icon{
+    font-size:3rem;
+    margin-bottom:0.8rem;
+    transition:transform 0.3s ease;
+  }
+  .lockbox.unlocked .lock-icon{ transform:scale(1.15) rotate(-8deg); }
+  .lock-text{
+    font-family:'Baloo 2', cursive;
+    font-size:1.1rem;
+    color:var(--plum);
+  }
+  .lock-shake-hint{
+    font-size:0.8rem;
+    opacity:0.55;
+    margin-top:0.5rem;
+  }
+  .messages-grid{
+    display:none;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:1.6rem;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .messages-grid.show{
+    display:grid;
+    animation:fadein 0.5s ease;
+  }
+  @keyframes fadein{
+    from{ opacity:0; transform:translateY(12px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .msg-card{
+    background:var(--mint);
+    border-radius:20px;
+    padding:1.6rem 1.4rem 1.4rem;
+    position:relative;
+    box-shadow:0 6px 0 rgba(74,37,69,0.1);
+  }
+  .msg-card:nth-child(2){ background:var(--sky); }
+  .msg-card:nth-child(3){ background:var(--butter); }
+  .msg-card:nth-child(4){ background:var(--pink); }
+  .msg-ribbon{
+    font-family:'Baloo 2', cursive;
+    font-size:0.85rem;
+    color:var(--coral);
+    background:white;
+    display:inline-block;
+    padding:0.15rem 0.6rem;
+    border-radius:999px;
+    margin-bottom:0.7rem;
+  }
+  .msg-body{
+    font-size:0.98rem;
+    line-height:1.6;
+  }
+
+  /* Videos */
+  .video-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:1.6rem;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .video-slot{
+    background:var(--sky);
+    border-radius:20px;
+    aspect-ratio:16/10;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0.6rem;
+    box-shadow:0 6px 0 rgba(74,37,69,0.1);
+    border:3px dashed rgba(74,37,69,0.25);
+  }
+  .video-slot video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 17px;
+  }
+  .video-slot .play{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+    color:var(--coral);
+    box-shadow:0 4px 0 rgba(74,37,69,0.12);
+  }
+  .video-slot span{
+    font-size:0.85rem;
+    opacity:0.65;
+    text-align:center;
+    padding:0 1rem;
+  }
+
+  /* footer */
+  footer{
+    text-align:center;
+    padding:3rem 1.5rem 4rem;
+    font-size:0.85rem;
+    opacity:0.55;
+  }
+  footer .cake{
+    font-size:1.8rem;
+    margin-bottom:0.6rem;
+  }
+
+  ::selection{ background:var(--butter); }
+
+  a, button{
+    font-family:inherit;
+  }
+
+  /* keyboard focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:3px solid var(--coral);
+    outline-offset:2px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<section class="hero" id="hero">
+  <div class="eyebrow">A LITTLE SITE JUST FOR HER</div>
+  <h1>Happy Birthday<br><span class="name">Amybliss</span> 🎈</h1>
+  <p class="sub">18 trips around the sun. Here's your countdown, bestie 💗</p>
+
+  <div class="countdown" id="countdown" aria-live="polite">
+    <div class="flip"><span class="num" id="cd-days">00</span><span class="label">days</span></div>
+    <div class="flip"><span class="num" id="cd-hours">00</span><span class="label">hours</span></div>
+    <div class="flip"><span class="num" id="cd-mins">00</span><span class="label">mins</span></div>
+    <div class="flip"><span class="num" id="cd-secs">00</span><span class="label">secs</span></div>
+  </div>
+  <div class="its-here" id="its-here">IT'S YOUR DAY! 🎉🎂</div>
+
+</section>
+
+<section id="message">
+  <h2 class="section-title">For You 🎀</h2>
+  <p class="section-sub">A little something before the big day.</p>
+  <div class="message-wrap">
+    <p>Chiamaka! Happy 18<sup>th</sup> Birthday and I can't give you any thing on your special day but i couldn't let it pass without doing something for you. You've been such a ray of sunshine — funny, kind, endlessly good at making everything more fun just by being there.</p>
+    <p style="margin-top:1rem;">Here's to more inside jokes, more chaotic memories, and everything good headed your way this year. I hope your day is as amazing as you are.</p>
+    <p class="sign-off">Love you lots 💕</p>
+  </div>
+  <p class="editable-hint">From Deborah</p>
+</section>
+
+<section id="locked-messages">
+  <h2 class="section-title">A Surprise From Her Friends 🔒</h2>
+  <p class="section-sub" id="lock-sub">Sealed until the big day. Come back on 11 August (UK time) to unlock your birthday messages written by Feelings, Somto anf the two Favours</p>
+
+  <div class="lockbox" id="lockbox" role="button" tabindex="0" aria-pressed="false" aria-label="Locked birthday messages, opens on her birthday">
+    <div class="lock-icon" id="lock-icon">🔒</div>
+    <div class="lock-text" id="lock-text">Locked until 11 August</div>
+    <div class="lock-shake-hint" id="lock-hint">tap the lock — nice try though 😉</div>
+  </div>
+
+  <div class="messages-grid" id="messages-grid">
+    <div class="msg-card"><div class="msg-ribbon">01</div><p class="msg-body">You are such an amazing friend and I'm so grateful to have you. Your kindness, your smile and your beautiful heart inspire everyone around you - you are simply one of a kind.
+U light up any room u enter 
+
+You deserve the best today and always, and I pray life gives you even more than you wish for yourself.
+
+Happy Birthday chiamaka! Wishing you joy, love, success and all your heart desires, more yansh, morw beauty. Keep shining, queen! 🎂💖
+~ Feelings</p></div>
+    <div class="msg-card"><div class="msg-ribbon">02</div><p class="msg-body">Message from friend #2 goes here 💌</p></div>
+    <div class="msg-card"><div class="msg-ribbon">03</div><p class="msg-body">Message from friend #3 goes here 💌</p></div>
+    <div class="msg-card"><div class="msg-ribbon">04</div><p class="msg-body">Message from friend #4 goes here 💌</p></div>
+  </div>
+  <p class="editable-hint" id="messages-hint" style="display:none;">✏️ swap each card's text for your friends' real messages anytime</p>
+</section>
+
+<section id="gallery">
+  <h2 class="section-title">Photos 📸</h2>
+  <p class="section-sub">HERE'S THE BIRTHDAY GIRL.</p>
+  <div class="gallery">
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image0.jpeg" alt="fine girl"></div><div class="cap">HER</div></div>
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image1.jpeg" alt="chiamaka"></div><div class="cap">FINE BABY</div></div>
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image2.jpeg" alt=""></div><div class="cap">CHIAMAKA</div></div>
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image3.jpeg" alt="chiamaka"></div><div class="cap">GOD BLESS</div></div>
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image6.jpeg" alt="chiamaka"></div><div class="cap">THE BIRTHDAY GIRL</div></div>
+    <div class="polaroid"><div class="tape"></div><div class="frame"><img src="image7.jpeg" alt="chiamaka"></div><div class="cap">AMYBLISS</div></div>
+  </div>
+</section>
+
+
+<section id="videos">
+  <h2 class="section-title">Video Memories 🎬</h2>
+  <div class="video-grid">
+    <div class="video-slot"><video src="vidoes\Video_2.mov" controls autoplay muted playsinline></video><span>add video 1</span></div>
+    <div class="video-slot"><video src="vidoes\Video_7.mov" controls autoplay muted playsinline></video><span>add video 2</span></div>
+    <div class="video-slot"><video src="vidoes\Video_8.mov" controls autoplay muted playsinline></video><span>add video 3</span></div>
+    <div class="video-slot"><video src="vidoes\Video_11.mov" controls autoplay muted playsinline></video><span>add video 4</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="cake">🎂</div>
+  Made with love, By DEMI.
+</footer>
+
+<script>
+(function(){
+  // ---- Countdown to Aug 12, 00:00 UK time (Europe/London), handling BST/GMT automatically ----
+  function getUKOffsetMinutes(date){
+    // Determine UK offset (GMT/BST) for a given date using Intl
+    const dtf = new Intl.DateTimeFormat('en-GB', {
+      timeZone:'Europe/London', hour:'2-digit', hour12:false,
+      year:'numeric', month:'2-digit', day:'2-digit',
+      minute:'2-digit', second:'2-digit'
+    });
+    const parts = dtf.formatToParts(date).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
+    const asUTC = Date.UTC(parts.year, parts.month-1, parts.day, parts.hour, parts.minute, parts.second);
+    return (asUTC - date.getTime())/60000;
+  }
+
+  function nextUKAug12Midnight(){
+    const now = new Date();
+    let year = now.getUTCFullYear();
+    // build a candidate date at Aug 12 00:00 UK local
+    function candidateUTC(y){
+      const roughUTC = new Date(Date.UTC(y,7,11,0,0,0));
+      const offsetMin = getUKOffsetMinutes(roughUTC);
+      return new Date(roughUTC.getTime() - offsetMin*60000);
+    }
+    let target = candidateUTC(year);
+    if(target.getTime() <= now.getTime()){
+      target = candidateUTC(year+1);
+    }
+    return target;
+  }
+
+  const target = nextUKAug12Midnight();
+  const elDays = document.getElementById('cd-days');
+  const elHours = document.getElementById('cd-hours');
+  const elMins = document.getElementById('cd-mins');
+  const elSecs = document.getElementById('cd-secs');
+  const cdBox = document.getElementById('countdown');
+  const itsHere = document.getElementById('its-here');
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    const now = new Date();
+    let diff = target.getTime() - now.getTime();
+    if(diff <= 0){
+      cdBox.style.display='none';
+      itsHere.style.display='block';
+      clearInterval(timer);
+      launchConfetti(true);
+      return;
+    }
+    const days = Math.floor(diff/86400000);
+    diff -= days*86400000;
+    const hours = Math.floor(diff/3600000);
+    diff -= hours*3600000;
+    const mins = Math.floor(diff/60000);
+    diff -= mins*60000;
+    const secs = Math.floor(diff/1000);
+
+    elDays.textContent = pad(days);
+    elHours.textContent = pad(hours);
+    elMins.textContent = pad(mins);
+    elSecs.textContent = pad(secs);
+  }
+  tick();
+  const timer = setInterval(tick, 1000);
+
+  // ---- Locked messages ----
+  const lockbox = document.getElementById('lockbox');
+  const lockIcon = document.getElementById('lock-icon');
+  const lockText = document.getElementById('lock-text');
+  const lockHint = document.getElementById('lock-hint');
+  const lockSub = document.getElementById('lock-sub');
+  const messagesGrid = document.getElementById('messages-grid');
+  const messagesHint = document.getElementById('messages-hint');
+
+  function isUnlocked(){
+    return new Date().getTime() >= target.getTime();
+  }
+
+  function openMessages(){
+    lockbox.style.display = 'none';
+    lockSub.textContent = "It's her birthday! Here's what her friends wrote 🎉";
+    messagesGrid.classList.add('show');
+    messagesHint.style.display = 'block';
+  }
+
+  function refreshLockUI(){
+    if(isUnlocked()){
+      openMessages();
+    }
+  }
+  refreshLockUI();
+
+  lockbox.addEventListener('click', function(){
+    if(isUnlocked()){
+      openMessages();
+      return;
+    }
+    lockbox.classList.add('shake');
+    lockHint.style.opacity = '1';
+    setTimeout(()=> lockbox.classList.remove('shake'), 400);
+  });
+  lockbox.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      lockbox.click();
+    }
+  });
+
+ 
+  // recheck lock state each second alongside countdown
+  setInterval(refreshLockUI, 1000);
+
+
+  // ---- Floating balloons ----
+  const heroEl = document.getElementById('hero');
+  const balloonColors = ['#FF6F91','#B8E6FF','#FFF3B0','#C4F5D0','#FFD1E8'];
+  for(let i=0;i<8;i++){
+    const b = document.createElement('div');
+    b.className='balloon';
+    b.style.left = (Math.random()*90+2)+'%';
+    b.style.background = balloonColors[i % balloonColors.length];
+    b.style.animationDuration = (10+Math.random()*8)+'s';
+    b.style.animationDelay = (Math.random()*8)+'s';
+    heroEl.appendChild(b);
+  }
+
+  // ---- Confetti burst on load (subtle) ----
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let particles = [];
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function launchConfetti(big){
+    if(prefersReduced) return;
+    const count = big ? 160 : 70;
+    const colors = ['#FF6F91','#B8E6FF','#FFF3B0','#C4F5D0','#FFD1E8'];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: -20 - Math.random()*canvas.height*0.3,
+        r: 4+Math.random()*5,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        vy: 2+Math.random()*3,
+        vx: -1.5+Math.random()*3,
+        rot: Math.random()*360,
+        vr: -6+Math.random()*12,
+        life: 0
+      });
+    }
+    if(!animating){ animating = true; animate(); }
+  }
+
+  let animating = false;
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life++;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6);
+      ctx.restore();
+    });
+    particles = particles.filter(p=> p.y < canvas.height+40 && p.life < 600);
+    if(particles.length>0){
+      requestAnimationFrame(animate);
+    } else {
+      animating = false;
+    }
+  }
+
+  window.addEventListener('load', ()=> launchConfetti(false));
+})();
+</script>
+
+</body>
+</html>
+
+
+
+
