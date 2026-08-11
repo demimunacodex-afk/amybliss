@@ -596,19 +596,30 @@ My love 💕</p></div>
   }
 
   function nextUKAug12Midnight(){
-    const now = new Date();
-    let year = now.getUTCFullYear();
-    // build a candidate date at Aug 12 00:00 UK local
-    function candidateUTC(y){
-      const roughUTC = new Date(Date.UTC(y,7,11,0,0,0));
-      const offsetMin = getUKOffsetMinutes(roughUTC);
-      return new Date(roughUTC.getTime() - offsetMin*60000);
-    }
-    let target = candidateUTC(year);
-    if(target.getTime() <= now.getTime()){
-      target = candidateUTC(year+1);
-    }
-    return target;
+  const now = new Date();
+
+  function ukDateParts(date){
+    const dtf = new Intl.DateTimeFormat('en-GB', {
+      timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit'
+    });
+    const parts = dtf.formatToParts(date).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
+    return { y:+parts.year, m:+parts.month, d:+parts.day };
+  }
+
+  function candidateUTC(y){
+    const roughUTC = new Date(Date.UTC(y,7,11,0,0,0));
+    const offsetMin = getUKOffsetMinutes(roughUTC);
+    return new Date(roughUTC.getTime() - offsetMin*60000);
+  }
+
+  const today = ukDateParts(now);
+  let year = today.y;
+  // if we're already past 11 Aug this UK calendar year, target next year
+  if (today.m > 8 || (today.m === 8 && today.d > 11)) {
+    year = today.y + 1;
+  }
+  return candidateUTC(year);
+}
   }
 
   const target = nextUKAug12Midnight();
@@ -657,7 +668,7 @@ My love 💕</p></div>
   const messagesHint = document.getElementById('messages-hint');
 
   function isUnlocked(){
-    return new Date().getTime() >= target.getTime();
+    return true;
   }
 
   function openMessages(){
