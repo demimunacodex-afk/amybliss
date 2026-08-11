@@ -464,12 +464,6 @@
   <h1>Happy Birthday<br><span class="name">Amybliss</span> 🎈</h1>
   <p class="sub">18 trips around the sun. Here's your countdown, bestie 💗</p>
 
-  <div class="countdown" id="countdown" aria-live="polite">
-    <div class="flip"><span class="num" id="cd-days">00</span><span class="label">days</span></div>
-    <div class="flip"><span class="num" id="cd-hours">00</span><span class="label">hours</span></div>
-    <div class="flip"><span class="num" id="cd-mins">00</span><span class="label">mins</span></div>
-    <div class="flip"><span class="num" id="cd-secs">00</span><span class="label">secs</span></div>
-  </div>
 
   
   <div class="its-here" id="its-here">IT'S YOUR DAY! 🎉🎂</div>
@@ -583,125 +577,8 @@ My love 💕</p></div>
 </footer>
 
 <script>
-(function(){
-  // ---- Countdown to Aug 12, 00:00 UK time (Europe/London), handling BST/GMT automatically ----
-  function getUKOffsetMinutes(date){
-    // Determine UK offset (GMT/BST) for a given date using Intl
-    const dtf = new Intl.DateTimeFormat('en-GB', {
-      timeZone:'Europe/London', hour:'2-digit', hour12:false,
-      year:'numeric', month:'2-digit', day:'2-digit',
-      minute:'2-digit', second:'2-digit'
-    });
-    const parts = dtf.formatToParts(date).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
-    const asUTC = Date.UTC(parts.year, parts.month-1, parts.day, parts.hour, parts.minute, parts.second);
-    return (asUTC - date.getTime())/60000;
-  }
-
-  function nextUKAug12Midnight(){
-  function nextUKAug12Midnight(){
-    const now = new Date();
-    let year = now.getUTCFullYear();
-    // build a candidate date at Aug 12 00:00 UK local
-    function candidateUTC(y){
-      const roughUTC = new Date(Date.UTC(y,7,11,0,0,0));
-      const offsetMin = getUKOffsetMinutes(roughUTC);
-      return new Date(roughUTC.getTime() - offsetMin*60000);
-    }
-    let target = candidateUTC(year);
-    if(target.getTime() <= now.getTime()){
-      target = candidateUTC(year+1);
-    }
-    return target;
-  }
-    function isUnlocked(){
-  return true; // TEMP - preview only, remove after checking
-  }
-  }
-
-  const target = nextUKAug12Midnight();
-  const elDays = document.getElementById('cd-days');
-  const elHours = document.getElementById('cd-hours');
-  const elMins = document.getElementById('cd-mins');
-  const elSecs = document.getElementById('cd-secs');
-  const cdBox = document.getElementById('countdown');
-  const itsHere = document.getElementById('its-here');
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
-  function tick(){
-    const now = new Date();
-    let diff = target.getTime() - now.getTime();
-    if(diff <= 0){
-      cdBox.style.display='none';
-      itsHere.style.display='block';
-      clearInterval(timer);
-      launchConfetti(true);
-      return;
-    }
-    const days = Math.floor(diff/86400000);
-    diff -= days*86400000;
-    const hours = Math.floor(diff/3600000);
-    diff -= hours*3600000;
-    const mins = Math.floor(diff/60000);
-    diff -= mins*60000;
-    const secs = Math.floor(diff/1000);
-
-    elDays.textContent = pad(days);
-    elHours.textContent = pad(hours);
-    elMins.textContent = pad(mins);
-    elSecs.textContent = pad(secs);
-  }
-  tick();
-  const timer = setInterval(tick, 1000);
-
-  // ---- Locked messages ----
-  const lockbox = document.getElementById('lockbox');
-  const lockIcon = document.getElementById('lock-icon');
-  const lockText = document.getElementById('lock-text');
-  const lockHint = document.getElementById('lock-hint');
-  const lockSub = document.getElementById('lock-sub');
-  const messagesGrid = document.getElementById('messages-grid');
-  const messagesHint = document.getElementById('messages-hint');
-
-  function isUnlocked(){
-    return true;
-  }
-
-  function openMessages(){
-    lockbox.style.display = 'none';
-    lockSub.textContent = "It's her birthday! Here's what her friends wrote 🎉";
-    messagesGrid.classList.add('show');
-    messagesHint.style.display = 'block';
-  }
-
-  function refreshLockUI(){
-    if(isUnlocked()){
-      openMessages();
-    }
-  }
-  refreshLockUI();
-
-  lockbox.addEventListener('click', function(){
-    if(isUnlocked()){
-      openMessages();
-      return;
-    }
-    lockbox.classList.add('shake');
-    lockHint.style.opacity = '1';
-    setTimeout(()=> lockbox.classList.remove('shake'), 400);
-  });
-  lockbox.addEventListener('keydown', function(e){
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      lockbox.click();
-    }
-  });
-
- 
-  // recheck lock state each second alongside countdown
-  setInterval(refreshLockUI, 1000);
-
-
+(function()
+  
   // ---- Floating balloons ----
   const heroEl = document.getElementById('hero');
   const balloonColors = ['#FF6F91','#B8E6FF','#FFF3B0','#C4F5D0','#FFD1E8'];
