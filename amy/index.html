@@ -346,10 +346,12 @@
     margin-top:0.5rem;
   }
   .messages-grid{
+    display: grid;
     grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
     gap:1.6rem;
     max-width:900px;
     margin:0 auto;
+    padding-buttom:10px;
   }
   .messages-grid.show{
     display:grid;
@@ -482,13 +484,7 @@
 
 <section>
   <h2 class="section-title">A Surprise From Her Friends 🔒</h2>
-  <p class="section-sub" id="lock-sub">Sealed until the big day. Come back on 11 August (UK time) to unlock your birthday messages written by Feelings, Somto,the two Favours and Ijendu</p>
 
-  <div class="lockbox" role="button" tabindex="0" aria-pressed="false" aria-label="Locked birthday messages, opens on her birthday">
-  
-    <div class="lock-text" >Locked until 11 August</div>
-    <div class="lock-shake-hint">tap the lock — nice try though 😉</div>
-  </div>
 
   <div class="messages-grid">
     <div class="msg-card"><div class="msg-ribbon">01</div><p class="msg-body">You are such an amazing friend and I'm so grateful to have you. Your kindness, your smile and your beautiful heart inspire everyone around you - you are simply one of a kind.
